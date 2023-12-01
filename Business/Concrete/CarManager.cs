@@ -18,19 +18,44 @@ namespace Business.Concrete
            _iCarDal = carDal;
         }
 
+        public void Add(Car car)
+        {
+            if(car.Name.Length < 2 || car.DailyPrice <= 0)
+            
+                Console.WriteLine("Yeni araç adı minimum 2 karakter olmalı ve günlük ücreti 0'dan büyük olmalıdır");
+            
+            else
+                _iCarDal.Add(car);
+        }
+
+        public void Delete(Car car)
+        {
+            _iCarDal.Delete(car);
+        }
+
         public List<Car> GetAll()
         {
            return _iCarDal.GetAll();
         }
 
-        public List<Car> GetAllByCategoryId(int id)
+        public List<Car> GetAllByBrandId(int id)
         {
-            throw new NotImplementedException();
+            return _iCarDal.GetAll(p => p.BrandId == id);
+        }
+
+        public List<Car> GetAllByColorId(int id)
+        {
+            return _iCarDal.GetAll(p => p.ColorId == id);
         }
 
         public List<Car> GetAllByUnitPrice(decimal min, decimal max)
         {
-            throw new NotImplementedException();
+            return _iCarDal.GetAll(p => p.DailyPrice >= min && p.DailyPrice <= max);
+        }
+
+        public void Update(Car car)
+        {
+            _iCarDal.Update(car);
         }
     }
 }
