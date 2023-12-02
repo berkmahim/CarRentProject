@@ -1,4 +1,5 @@
 ﻿using DataAccess.Abstract;
+using Core.DataAccess.EntityFramework;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,57 +8,28 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Entities.DTOs;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, CarRentDbContext>, ICarDal
     {
-        public void Add(Car entity)
-        {
-            using (CarRentDbContext carRentDbContext = new CarRentDbContext())
-            {
-                var addedCar = carRentDbContext.Entry(entity);
-                addedCar.State = EntityState.Added;
-                carRentDbContext.SaveChanges();
-            }
-        }
-
-        public void Delete(Car entity)
-        {
-            using (CarRentDbContext carRentDbContext = new CarRentDbContext())
-            {
-                var deletedCar = carRentDbContext.Entry(entity);
-                deletedCar.State = EntityState.Deleted;
-                carRentDbContext.SaveChanges();
-            }
-        }
-
-      
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
+        public List<CarDetailDto> GetCarDetails()
         {
             using (CarRentDbContext context = new CarRentDbContext())
             {
-                //return filter == null ? context.Set<Car>().ToList() : context.Set<Car>().Where(filter).ToList();
+                var result = from car in context.Cars
+                             join brand in context.Brands
+                             on car.BrandId equals brand.Id
+                             join color in context.Colors
+                             on car.ColorId equals color.Id
+                             select new CarDetailDto { 
+                                 CarName = car.Name, 
+                                 BrandName = brand.Name, 
+                                 ColorName = color.Name, 
+                                 DailyPrice = car.DailyPrice };
                 
-                return filter == null ? context.Set<Car>().ToList() : context.Set<Car>().Where(filter).ToList();
-            }
-        }
-
-        public Car GetById(Expression<Func<Car, bool>> filter)
-        {
-            using (CarRentDbContext context = new CarRentDbContext())
-            {
-                return context.Set<Car>().SingleOrDefault(filter);
-            }
-        }
-
-        public void Update(Car entity)
-        {
-            using (CarRentDbContext carRentDbContext = new CarRentDbContext())
-            {
-                var updatedCar = carRentDbContext.Entry(entity);
-                updatedCar.State = EntityState.Modified;
-                carRentDbContext.SaveChanges();
+                return result.ToList();
             }
         }
     }

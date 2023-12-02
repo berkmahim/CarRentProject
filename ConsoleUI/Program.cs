@@ -9,11 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 CarManager carManager = new CarManager(new EfCarDal());
 
-foreach (var car in carManager.GetAllByBrandId(1))
+foreach (var car in carManager.GetCarDetails())
 {
-    Console.WriteLine(car.Name);
+    Console.WriteLine(car.CarName + " " + car.BrandName + " " + car.ColorName + " " + car.DailyPrice);
 }
-
-Car car1 = new Car {BrandId = 2, ColorId = 3, DailyPrice = 300, ModelYear = 2024, Name = "RS7", Description = "spor" };
-Car car2 = new Car {BrandId = 2, ColorId = 3, DailyPrice = 0, ModelYear = 2024, Name = "RS7", Description = "spor" };
-carManager.Add(car2);
