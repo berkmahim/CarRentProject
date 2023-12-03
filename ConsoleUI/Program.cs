@@ -1,15 +1,17 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Business.Concrete;
+using Core.Utilities.Reuslts;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
-CarManager carManager = new CarManager(new EfCarDal());
+ColorManager colorManager =  new ColorManager(new EfColorDal());
 
-foreach (var car in carManager.GetCarDetails())
+
+foreach (var color in colorManager.GetAll().Data)
 {
-    Console.WriteLine(car.CarName + " " + car.BrandName + " " + car.ColorName + " " + car.DailyPrice);
+    Console.WriteLine(color.Name);
 }
