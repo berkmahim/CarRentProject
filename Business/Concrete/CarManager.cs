@@ -76,7 +76,11 @@ namespace Business.Concrete
             _iCarDal.Update(car);
             return new SuccessResult(Messages.CarUpdated);
         }
-
+       
+        public IDataResult<Car> GetById(int id)
+        {
+            return new SuccessDataResult<Car>(_iCarDal.Get(c => c.Id == id), Messages.CarsListed);
+        }
     }
 
 
